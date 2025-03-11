@@ -1,5 +1,5 @@
 // frontend/src/context/TicketContext.js
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useCallback } from 'react';
 import {
   getAllTickets,
   getTicketById,
@@ -132,8 +132,8 @@ const ticketReducer = (state, action) => {
 export const TicketProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ticketReducer, initialState);
 
-  // Get all tickets
-  const getTickets = async (filters = {}) => {
+  // Get all tickets - menggunakan useCallback untuk menstabilkan fungsi
+  const getTickets = useCallback(async (filters = {}) => {
     dispatch({ type: 'GET_TICKETS_START' });
     try {
       const res = await getAllTickets(filters);
@@ -147,10 +147,12 @@ export const TicketProvider = ({ children }) => {
         payload: err.response?.data?.message || 'Failed to get tickets'
       });
     }
-  };
+  }, []);
 
-  // Get ticket by ID
-  const getTicket = async (ticketId) => {
+  // Get ticket by ID - menggunakan useCallback untuk menstabilkan fungsi
+  const getTicket = useCallback(async (ticketId) => {
+    if (!ticketId) return;
+    
     dispatch({ type: 'GET_TICKET_START' });
     try {
       const res = await getTicketById(ticketId);
@@ -164,10 +166,10 @@ export const TicketProvider = ({ children }) => {
         payload: err.response?.data?.message || 'Failed to get ticket'
       });
     }
-  };
+  }, []);
 
-  // Create ticket
-  const addTicket = async (ticketData) => {
+  // Create ticket - menggunakan useCallback untuk menstabilkan fungsi
+  const addTicket = useCallback(async (ticketData) => {
     dispatch({ type: 'CREATE_TICKET_START' });
     try {
       const res = await createTicket(ticketData);
@@ -183,10 +185,12 @@ export const TicketProvider = ({ children }) => {
       });
       throw err;
     }
-  };
+  }, []);
 
-  // Update ticket
-  const editTicket = async (ticketId, ticketData) => {
+  // Update ticket - menggunakan useCallback untuk menstabilkan fungsi
+  const editTicket = useCallback(async (ticketId, ticketData) => {
+    if (!ticketId) return;
+    
     dispatch({ type: 'UPDATE_TICKET_START' });
     try {
       const res = await updateTicket(ticketId, ticketData);
@@ -202,10 +206,12 @@ export const TicketProvider = ({ children }) => {
       });
       throw err;
     }
-  };
+  }, []);
 
-  // Add comment to ticket
-  const addTicketComment = async (ticketId, commentData) => {
+  // Add comment to ticket - menggunakan useCallback untuk menstabilkan fungsi
+  const addTicketComment = useCallback(async (ticketId, commentData) => {
+    if (!ticketId) return;
+    
     dispatch({ type: 'ADD_COMMENT_START' });
     try {
       const res = await addComment(ticketId, commentData);
@@ -221,10 +227,12 @@ export const TicketProvider = ({ children }) => {
       });
       throw err;
     }
-  };
+  }, []);
 
-  // Update comment
-  const editComment = async (commentId, commentData) => {
+  // Update comment - menggunakan useCallback untuk menstabilkan fungsi
+  const editComment = useCallback(async (commentId, commentData) => {
+    if (!commentId) return;
+    
     dispatch({ type: 'UPDATE_COMMENT_START' });
     try {
       const res = await updateComment(commentId, commentData);
@@ -240,10 +248,12 @@ export const TicketProvider = ({ children }) => {
       });
       throw err;
     }
-  };
+  }, []);
 
-  // Delete comment
-  const removeComment = async (commentId) => {
+  // Delete comment - menggunakan useCallback untuk menstabilkan fungsi
+  const removeComment = useCallback(async (commentId) => {
+    if (!commentId) return;
+    
     dispatch({ type: 'DELETE_COMMENT_START' });
     try {
       await deleteComment(commentId);
@@ -258,17 +268,17 @@ export const TicketProvider = ({ children }) => {
       });
       throw err;
     }
-  };
+  }, []);
 
-  // Clear current ticket
-  const clearCurrentTicket = () => {
+  // Clear current ticket - menggunakan useCallback untuk menstabilkan fungsi
+  const clearCurrentTicket = useCallback(() => {
     dispatch({ type: 'CLEAR_CURRENT_TICKET' });
-  };
+  }, []);
 
-  // Clear errors
-  const clearError = () => {
+  // Clear errors - menggunakan useCallback untuk menstabilkan fungsi
+  const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
-  };
+  }, []);
 
   return (
     <TicketContext.Provider
