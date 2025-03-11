@@ -59,8 +59,8 @@ const Header = () => {
   };
 
   return (
-    <nav className={`${isScrolled ? 'bg-primary-800' : 'bg-primary-700'} text-white shadow-lg transition-all duration-300`}>
-      <div className="container mx-auto px-4">
+    <nav className={`${isScrolled ? 'bg-blue-700' : 'bg-gradient-to-r from-blue-600 to-sky-500'} text-white shadow-lg transition-all duration-300`}>
+        <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-3">
           <Link 
             to="/" 
