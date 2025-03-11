@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaIdCard, FaUserPlus } from 'react-icons/fa';
 import { AuthContext } from '../../context/AuthContext';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
@@ -47,13 +47,20 @@ const RegisterPage = () => {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-secondary-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-secondary-50 to-secondary-100">
       <Header />
 
       <main className="flex-grow flex items-center justify-center p-4 py-8">
-        <div className="w-full max-w-lg">
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-center text-primary-700 mb-6">Daftar Akun</h2>
+        <div className="w-full max-w-2xl transition-all duration-300 hover:scale-[1.01]">
+          <div className="bg-white shadow-lg rounded-xl p-8 border border-gray-100">
+            <div className="text-center mb-8">
+              <div className="inline-block p-3 rounded-full bg-primary-100 mb-4">
+                <FaUserPlus className="text-primary-600 text-3xl" />
+              </div>
+              <h2 className="text-2xl font-bold text-primary-700">Buat Akun Baru</h2>
+              <p className="text-gray-500 mt-2">Isi formulir di bawah untuk mendaftar</p>
+            </div>
+            
             <Formik
               initialValues={{
                 firstName: '',
@@ -79,11 +86,11 @@ const RegisterPage = () => {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                     <div>
                       <label 
                         htmlFor="firstName" 
-                        className="form-label flex items-center"
+                        className="block text-gray-700 font-medium mb-2 flex items-center"
                       >
                         <FaIdCard className="mr-2 text-primary-600" />
                         Nama Depan
@@ -91,20 +98,20 @@ const RegisterPage = () => {
                       <Field
                         type="text"
                         name="firstName"
-                        className="form-input"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
                         placeholder="Masukkan nama depan"
                       />
                       <ErrorMessage
                         name="firstName"
                         component="div"
-                        className="form-error"
+                        className="mt-1 text-red-500 text-sm"
                       />
                     </div>
 
                     <div>
                       <label 
                         htmlFor="lastName" 
-                        className="form-label flex items-center"
+                        className="block text-gray-700 font-medium mb-2 flex items-center"
                       >
                         <FaIdCard className="mr-2 text-primary-600" />
                         Nama Belakang
@@ -112,21 +119,21 @@ const RegisterPage = () => {
                       <Field
                         type="text"
                         name="lastName"
-                        className="form-input"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
                         placeholder="Masukkan nama belakang"
                       />
                       <ErrorMessage
                         name="lastName"
                         component="div"
-                        className="form-error"
+                        className="mt-1 text-red-500 text-sm"
                       />
                     </div>
                   </div>
 
-                  <div className="mb-4">
+                  <div className="mb-5">
                     <label 
                       htmlFor="username" 
-                      className="form-label flex items-center"
+                      className="block text-gray-700 font-medium mb-2 flex items-center"
                     >
                       <FaUser className="mr-2 text-primary-600" />
                       Username
@@ -134,20 +141,20 @@ const RegisterPage = () => {
                     <Field
                       type="text"
                       name="username"
-                      className="form-input"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
                       placeholder="Pilih username"
                     />
                     <ErrorMessage
                       name="username"
                       component="div"
-                      className="form-error"
+                      className="mt-1 text-red-500 text-sm"
                     />
                   </div>
 
-                  <div className="mb-4">
+                  <div className="mb-5">
                     <label 
                       htmlFor="email" 
-                      className="form-label flex items-center"
+                      className="block text-gray-700 font-medium mb-2 flex items-center"
                     >
                       <FaEnvelope className="mr-2 text-primary-600" />
                       Email
@@ -155,78 +162,85 @@ const RegisterPage = () => {
                     <Field
                       type="email"
                       name="email"
-                      className="form-input"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
                       placeholder="Masukkan email"
                     />
                     <ErrorMessage
                       name="email"
                       component="div"
-                      className="form-error"
+                      className="mt-1 text-red-500 text-sm"
                     />
                   </div>
 
-                  <div className="mb-4">
-                    <label 
-                      htmlFor="password" 
-                      className="form-label flex items-center"
-                    >
-                      <FaLock className="mr-2 text-primary-600" />
-                      Password
-                    </label>
-                    <Field
-                      type="password"
-                      name="password"
-                      className="form-input"
-                      placeholder="Buat password"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="form-error"
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                    <div>
+                      <label 
+                        htmlFor="password" 
+                        className="block text-gray-700 font-medium mb-2 flex items-center"
+                      >
+                        <FaLock className="mr-2 text-primary-600" />
+                        Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="password"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
+                        placeholder="Buat password"
+                      />
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="mt-1 text-red-500 text-sm"
+                      />
+                    </div>
 
-                  <div className="mb-6">
-                    <label 
-                      htmlFor="confirmPassword" 
-                      className="form-label flex items-center"
-                    >
-                      <FaLock className="mr-2 text-primary-600" />
-                      Konfirmasi Password
-                    </label>
-                    <Field
-                      type="password"
-                      name="confirmPassword"
-                      className="form-input"
-                      placeholder="Konfirmasi password"
-                    />
-                    <ErrorMessage
-                      name="confirmPassword"
-                      component="div"
-                      className="form-error"
-                    />
+                    <div>
+                      <label 
+                        htmlFor="confirmPassword" 
+                        className="block text-gray-700 font-medium mb-2 flex items-center"
+                      >
+                        <FaLock className="mr-2 text-primary-600" />
+                        Konfirmasi Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="confirmPassword"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors outline-none"
+                        placeholder="Konfirmasi password"
+                      />
+                      <ErrorMessage
+                        name="confirmPassword"
+                        component="div"
+                        className="mt-1 text-red-500 text-sm"
+                      />
+                    </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors flex items-center justify-center"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         Mendaftar...
                       </span>
-                    ) : 'Daftar'}
+                    ) : (
+                      <span className="flex items-center">
+                        <FaUserPlus className="mr-2" />
+                        Daftar
+                      </span>
+                    )}
                   </button>
 
-                  <div className="mt-4 text-center">
-                    <p className="text-secondary-600">
+                  <div className="mt-6 text-center">
+                    <p className="text-gray-600">
                       Sudah punya akun?{' '}
-                      <Link to="/login" className="text-primary-600 hover:text-primary-700">
+                      <Link to="/login" className="text-primary-600 hover:text-primary-800 font-medium hover:underline">
                         Login di sini
                       </Link>
                     </p>
@@ -234,6 +248,11 @@ const RegisterPage = () => {
                 </Form>
               )}
             </Formik>
+          </div>
+          
+          <div className="mt-4 text-center text-sm text-gray-500">
+            <p>© 2025 Nama Aplikasi. Seluruh hak cipta dilindungi.</p>
+            <p className="mt-1">Dengan mendaftar, Anda menyetujui <Link to="/terms" className="text-primary-600 hover:underline">Syarat & Ketentuan</Link> dan <Link to="/privacy" className="text-primary-600 hover:underline">Kebijakan Privasi</Link> kami.</p>
           </div>
         </div>
       </main>
