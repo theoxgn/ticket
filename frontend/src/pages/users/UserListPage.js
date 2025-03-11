@@ -1,6 +1,6 @@
 // frontend/src/pages/users/UserListPage.js
 import React, { useEffect, useState, useContext } from 'react';
-import { FaSearch, FaUserCog, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaCheck, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../../context/AuthContext';
 import { getAllUsers } from '../../services/userService';
 import { toast } from 'react-toastify';

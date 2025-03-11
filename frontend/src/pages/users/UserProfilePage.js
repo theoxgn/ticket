@@ -1,7 +1,7 @@
 // frontend/src/pages/profile/ProfilePage.js
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { FaUser, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaSave } from 'react-icons/fa';
 
 const styles = {
   container: {

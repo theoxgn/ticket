@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProjectContext } from '../../context/ProjectContext';
 import { TicketContext } from '../../context/TicketContext';
-import { AuthContext } from '../../context/AuthContext';
 import { 
   FaPlus, 
   FaProjectDiagram, 
@@ -14,7 +13,6 @@ import {
 } from 'react-icons/fa';
 
 const DashboardPage = () => {
-  const { user } = useContext(AuthContext);
   const { projects, loading: projectsLoading, getProjects } = useContext(ProjectContext);
   const { tickets, loading: ticketsLoading, getTickets } = useContext(TicketContext);
   const [stats, setStats] = useState({

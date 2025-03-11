@@ -5,17 +5,16 @@ import { toast } from 'react-toastify';
 import { ProjectContext } from '../../context/ProjectContext';
 import { AuthContext } from '../../context/AuthContext';
 import { UserContext } from '../../context/UserContext'; // Tambahkan import UserContext
-import { FaEdit, FaPlus, FaUsers, FaTicketAlt, FaArrowLeft, FaTimes, FaCheck, FaSearch } from 'react-icons/fa';
-import axios from 'axios';
+import { FaEdit, FaPlus, FaUsers, FaTicketAlt, FaArrowLeft, FaTimes, FaSearch } from 'react-icons/fa';
 
 const ProjectDetailsPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { currentProject, loading, getProject, clearCurrentProject, addUserToProject } = useContext(ProjectContext);
   const { users, loading: usersLoading, getUsers } = useContext(UserContext); // Gunakan UserContext
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isManager, setIsManager] = useState(false);
+  // const [isManager, setIsManager] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   
   // States for add team member modal
@@ -23,7 +22,7 @@ const ProjectDetailsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]); // List user yang telah difilter
-  const [isSearching, setIsSearching] = useState(false);
+  // const [isSearching, setIsSearching] = useState(false);
   const [selectedRole, setSelectedRole] = useState('member');
   const [selectedUser, setSelectedUser] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,7 +79,7 @@ const ProjectDetailsPage = () => {
       console.log("DEBUG - User project role:", projectRole);
       
       // Set state berdasarkan peran
-      setIsManager(projectRole === 'manager');
+      // setIsManager(projectRole === 'manager');
       setIsOwner(projectRole === 'owner');
       
       // User adalah admin proyek jika: admin sistem ATAU owner/manager proyek
