@@ -72,18 +72,6 @@ const Header = () => {
             <span className="group-hover:text-primary-200 transition-all">Ticket Tracker</span>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex relative mx-4 flex-1 max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FaSearch className="h-5 w-5 text-primary-400" />
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-10 pr-3 py-2 rounded-full border-0 bg-primary-600 placeholder-primary-300 text-white focus:outline-none focus:ring-2 focus:ring-white"
-              placeholder="Search tickets or projects..."
-            />
-          </div>
-
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
@@ -137,11 +125,6 @@ const Header = () => {
                   </Link>
                 )}
 
-                {/* Notifications Icon */}
-                <button className="p-2 rounded-full hover:bg-primary-600 relative">
-                  <FaBell />
-                  <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
-                </button>
 
                 {/* Profile Dropdown */}
                 <div className="relative ml-3">

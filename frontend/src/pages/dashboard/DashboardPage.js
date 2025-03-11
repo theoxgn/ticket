@@ -51,10 +51,10 @@ const DashboardPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-secondary-800">Dashboard</h1>
         <div className="flex space-x-2 mt-4 md:mt-0">
-          <Link to="/projects/new" className="btn btn-primary flex items-center">
+          <Link to="/projects/new" className="btn btn-primary flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
             <FaPlus className="mr-2" /> Proyek Baru
           </Link>
-          <Link to="/tickets/new" className="btn btn-primary flex items-center">
+          <Link to="/tickets/new" className="btn btn-primary flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
             <FaPlus className="mr-2" /> Tiket Baru
           </Link>
         </div>
