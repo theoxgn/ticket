@@ -7,6 +7,122 @@ import { toast } from 'react-toastify';
 import { ProjectContext } from '../../context/ProjectContext';
 import { FaSave, FaArrowLeft } from 'react-icons/fa';
 
+// Tambahkan inline styles
+const styles = {
+  formContainer: {
+    backgroundColor: 'white',
+    borderRadius: '0.5rem',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    padding: '2rem',
+    marginBottom: '2rem'
+  },
+  formTitle: {
+    fontSize: '1.5rem',
+    fontWeight: '700',
+    color: '#2d3748',
+    marginBottom: '1.5rem',
+    paddingBottom: '0.75rem',
+    borderBottom: '1px solid #e2e8f0'
+  },
+  formGroup: {
+    marginBottom: '1.5rem'
+  },
+  formLabel: {
+    display: 'block',
+    fontWeight: '500',
+    marginBottom: '0.5rem',
+    color: '#4a5568'
+  },
+  formInput: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.375rem',
+    border: '1px solid #cbd5e0',
+    backgroundColor: '#fff',
+    color: '#2d3748',
+    transition: 'border-color 0.2s, box-shadow 0.2s'
+  },
+  formTextarea: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.375rem',
+    border: '1px solid #cbd5e0',
+    backgroundColor: '#fff',
+    color: '#2d3748',
+    minHeight: '120px',
+    resize: 'vertical',
+    transition: 'border-color 0.2s, box-shadow 0.2s'
+  },
+  formActions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '0.75rem',
+    marginTop: '2rem'
+  },
+  btnPrimary: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.625rem 1.25rem',
+    backgroundColor: '#3182ce',
+    color: 'white',
+    borderRadius: '0.375rem',
+    fontWeight: '500',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  btnSecondary: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.625rem 1.25rem',
+    backgroundColor: '#e2e8f0',
+    color: '#4a5568',
+    borderRadius: '0.375rem',
+    fontWeight: '500',
+    border: '1px solid #cbd5e0',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  formError: {
+    color: '#e53e3e',
+    fontSize: '0.875rem',
+    marginTop: '0.5rem'
+  },
+  uppercaseInput: {
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    fontWeight: '500'
+  },
+  helpText: {
+    fontSize: '0.875rem',
+    color: '#718096',
+    marginTop: '0.5rem'
+  },
+  backLink: {
+    display: 'flex',
+    alignItems: 'center',
+    color: '#3182ce',
+    fontWeight: '500',
+    marginBottom: '1rem',
+    textDecoration: 'none'
+  },
+  backIcon: {
+    marginRight: '0.5rem'
+  },
+  requiredField: {
+    position: 'relative'
+  },
+  requiredFieldLabel: {
+    display: 'inline-block'
+  },
+  requiredFieldIndicator: {
+    color: '#e53e3e',
+    marginLeft: '0.25rem'
+  }
+};
+
 const ProjectFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -53,12 +169,18 @@ const ProjectFormPage = () => {
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    // Transform key to uppercase before submitting
+    const formattedValues = {
+      ...values,
+      key: values.key.toUpperCase()
+    };
+    
     try {
       if (isEditMode) {
-        await editProject(id, values);
+        await editProject(id, formattedValues);
         toast.success('Proyek berhasil diperbarui');
       } else {
-        const newProject = await addProject(values);
+        const newProject = await addProject(formattedValues);
         toast.success('Proyek berhasil dibuat');
         navigate(`/projects/${newProject.id}`);
       }
@@ -77,112 +199,125 @@ const ProjectFormPage = () => {
     );
   }
 
+  // Custom error component
+  const ErrorMessageComponent = ({ name }) => (
+    <ErrorMessage 
+      name={name} 
+      render={msg => <div style={styles.formError}>{msg}</div>}
+    />
+  );
+
   return (
     <div>
-      <div className="mb-4">
-        <Link to="/projects" className="text-primary-600 hover:text-primary-700 flex items-center">
-          <FaArrowLeft className="mr-2" /> Kembali ke Daftar Proyek
-        </Link>
-      </div>
+      <Link to="/projects" style={styles.backLink}>
+        <FaArrowLeft style={styles.backIcon} /> Kembali ke Daftar Proyek
+      </Link>
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-secondary-800 mb-6">
-            {isEditMode ? 'Edit Proyek' : 'Buat Proyek Baru'}
-          </h1>
+      <div style={styles.formContainer}>
+        <h1 style={styles.formTitle}>
+          {isEditMode ? 'Edit Proyek' : 'Buat Proyek Baru'}
+        </h1>
 
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-            enableReinitialize
-          >
-            {({ isSubmitting, values }) => (
-              <Form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="form-label">
-                    Nama Proyek
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ isSubmitting, values, handleChange, setFieldValue }) => (
+            <Form>
+              <div style={styles.formGroup}>
+                <div style={styles.requiredField}>
+                  <label htmlFor="name" style={styles.formLabel}>
+                    <span style={styles.requiredFieldLabel}>Nama Proyek</span>
+                    <span style={styles.requiredFieldIndicator}>*</span>
                   </label>
-                  <Field
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-input"
-                    placeholder="Masukkan nama proyek"
-                  />
-                  <ErrorMessage name="name" component="div" className="form-error" />
                 </div>
+                <Field
+                  type="text"
+                  id="name"
+                  name="name"
+                  style={styles.formInput}
+                  placeholder="Masukkan nama proyek"
+                />
+                <ErrorMessageComponent name="name" />
+              </div>
 
-                <div>
-                  <label htmlFor="key" className="form-label">
-                    Kode Proyek
+              <div style={styles.formGroup}>
+                <div style={styles.requiredField}>
+                  <label htmlFor="key" style={styles.formLabel}>
+                    <span style={styles.requiredFieldLabel}>Kode Proyek</span>
+                    <span style={styles.requiredFieldIndicator}>*</span>
                   </label>
-                  <Field
-                    type="text"
-                    id="key"
-                    name="key"
-                    className="form-input uppercase"
-                    placeholder="Contoh: PROJ, TRK, DEV"
-                    disabled={isEditMode} // Kode proyek tidak dapat diubah pada mode edit
-                    maxLength={10}
-                  />
-                  {isEditMode && (
-                    <p className="text-sm text-secondary-500 mt-1">
-                      Kode proyek tidak dapat diubah setelah dibuat.
-                    </p>
-                  )}
-                  <ErrorMessage name="key" component="div" className="form-error" />
                 </div>
-
-                <div>
-                  <label htmlFor="description" className="form-label">
-                    Deskripsi
-                  </label>
-                  <Field
-                    as="textarea"
-                    id="description"
-                    name="description"
-                    className="form-input min-h-[120px]"
-                    placeholder="Masukkan deskripsi proyek"
-                  />
-                  <ErrorMessage name="description" component="div" className="form-error" />
-                </div>
-
+                <Field
+                  type="text"
+                  id="key"
+                  name="key"
+                  style={{...styles.formInput, ...styles.uppercaseInput}}
+                  placeholder="CONTOH: PROJ, TRK, DEV"
+                  disabled={isEditMode}
+                  maxLength={10}
+                  onChange={(e) => {
+                    // Convert to uppercase on change
+                    e.target.value = e.target.value.toUpperCase();
+                    handleChange(e);
+                  }}
+                />
                 {isEditMode && (
-                  <div>
-                    <label className="flex items-center cursor-pointer">
-                      <Field
-                        type="checkbox"
-                        name="isActive"
-                        className="h-4 w-4 text-primary-600 border-secondary-300 rounded focus:ring-primary-500"
-                      />
-                      <span className="ml-2 text-secondary-700">
-                        Proyek aktif
-                      </span>
-                    </label>
-                  </div>
+                  <p style={styles.helpText}>
+                    Kode proyek tidak dapat diubah setelah dibuat.
+                  </p>
                 )}
+                <ErrorMessageComponent name="key" />
+              </div>
 
-                <div className="flex justify-end space-x-3">
-                  <Link
-                    to="/projects"
-                    className="btn btn-secondary"
-                  >
-                    Batal
-                  </Link>
-                  <button
-                    type="submit"
-                    className="btn btn-primary flex items-center"
-                    disabled={isSubmitting}
-                  >
-                    <FaSave className="mr-2" />
-                    {isSubmitting ? 'Menyimpan...' : 'Simpan'}
-                  </button>
+              <div style={styles.formGroup}>
+                <label htmlFor="description" style={styles.formLabel}>
+                  Deskripsi
+                </label>
+                <Field
+                  as="textarea"
+                  id="description"
+                  name="description"
+                  style={styles.formTextarea}
+                  placeholder="Masukkan deskripsi proyek"
+                />
+                <ErrorMessageComponent name="description" />
+              </div>
+
+              {isEditMode && (
+                <div style={styles.formGroup}>
+                  <label style={{...styles.formLabel, display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
+                    <Field
+                      type="checkbox"
+                      name="isActive"
+                      style={{marginRight: '0.5rem'}}
+                    />
+                    <span>Proyek aktif</span>
+                  </label>
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
+              )}
+
+              <div style={styles.formActions}>
+                <Link
+                  to="/projects"
+                  style={styles.btnSecondary}
+                >
+                  Batal
+                </Link>
+                <button
+                  type="submit"
+                  style={styles.btnPrimary}
+                  disabled={isSubmitting}
+                >
+                  <FaSave style={{marginRight: '0.5rem'}} />
+                  {isSubmitting ? 'Menyimpan...' : 'Simpan'}
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );

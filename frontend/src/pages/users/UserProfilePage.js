@@ -1,194 +1,269 @@
-// frontend/src/pages/users/UserProfilePage.js
+// frontend/src/pages/profile/ProfilePage.js
 import React, { useContext, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { toast } from 'react-toastify';
-import { FaSave, FaUserEdit } from 'react-icons/fa';
 import { AuthContext } from '../../context/AuthContext';
-import { updateUser } from '../../services/userService';
+import { FaUser, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
-const UserProfilePage = () => {
-  const { user, logout } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-
-  if (!user) {
-    return (
-      <div className="bg-white shadow-md rounded-lg p-6 text-center">
-        <p className="text-secondary-600 mb-4">Silahkan login untuk melihat profil Anda</p>
-      </div>
-    );
+const styles = {
+  container: {
+    padding: '0 1rem',
+    maxWidth: '1200px',
+    margin: '0 auto'
+  },
+  heading: {
+    fontSize: '1.75rem',
+    fontWeight: '700',
+    color: '#2d3748',
+    marginBottom: '1.5rem',
+    paddingBottom: '0.5rem',
+    borderBottom: '1px solid #e2e8f0'
+  },
+  profileContainer: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 2fr',
+    gap: '2rem'
+  },
+  profileCard: {
+    backgroundColor: 'white',
+    borderRadius: '0.5rem',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    padding: '2rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center'
+  },
+  avatar: {
+    width: '120px',
+    height: '120px',
+    borderRadius: '50%',
+    backgroundColor: '#e6f0fb',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '2.5rem',
+    fontWeight: '600',
+    color: '#3182ce',
+    marginBottom: '1rem'
+  },
+  profileName: {
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    color: '#2d3748',
+    marginBottom: '0.5rem'
+  },
+  profileUsername: {
+    fontSize: '1rem',
+    color: '#718096',
+    marginBottom: '1rem'
+  },
+  profileRole: {
+    backgroundColor: '#e6f0fb',
+    color: '#3182ce',
+    padding: '0.25rem 1rem',
+    borderRadius: '1rem',
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    display: 'inline-block'
+  },
+  createdAt: {
+    marginTop: '1.5rem',
+    fontSize: '0.875rem',
+    color: '#718096'
+  },
+  editProfileCard: {
+    backgroundColor: 'white',
+    borderRadius: '0.5rem',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    padding: '2rem'
+  },
+  editHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '1.5rem'
+  },
+  editIcon: {
+    color: '#3182ce',
+    marginRight: '0.5rem'
+  },
+  editTitle: {
+    fontSize: '1.25rem',
+    fontWeight: '600',
+    color: '#2d3748'
+  },
+  formRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1.5rem',
+    marginBottom: '1.5rem'
+  },
+  formGroup: {
+    marginBottom: '1.5rem'
+  },
+  formLabel: {
+    display: 'block',
+    fontWeight: '500',
+    marginBottom: '0.5rem',
+    color: '#4a5568'
+  },
+  formInput: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.375rem',
+    border: '1px solid #cbd5e0',
+    backgroundColor: '#fff',
+    color: '#2d3748',
+    transition: 'border-color 0.2s, box-shadow 0.2s'
+  },
+  saveButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.625rem 1.25rem',
+    backgroundColor: '#3182ce',
+    color: 'white',
+    borderRadius: '0.375rem',
+    fontWeight: '500',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+    marginLeft: 'auto'
+  },
+  buttonIcon: {
+    marginRight: '0.5rem'
   }
+};
 
-  const initialValues = {
+const ProfilePage = () => {
+  const { user, updateUser } = useContext(AuthContext);
+  const [formData, setFormData] = useState({
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     username: user.username || '',
-    email: user.email || '',
+    email: user.email || ''
+  });
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string()
-      .required('Nama depan wajib diisi'),
-    lastName: Yup.string()
-      .required('Nama belakang wajib diisi'),
-    username: Yup.string()
-      .required('Username wajib diisi')
-      .min(3, 'Username minimal 3 karakter'),
-    email: Yup.string()
-      .required('Email wajib diisi')
-      .email('Format email tidak valid'),
-  });
-
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      setLoading(true);
-      await updateUser(user.id, values);
-      toast.success('Profil berhasil diperbarui. Silahkan login kembali untuk melihat perubahan.');
-      
-      // Logout after profile update to refresh user data
-      setTimeout(() => {
-        logout();
-      }, 2000);
+      await updateUser(formData);
+      setIsEditing(false);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Gagal memperbarui profil');
-    } finally {
-      setSubmitting(false);
-      setLoading(false);
+      console.error('Error updating profile:', error);
     }
   };
 
-  return (
-    <div>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-secondary-800">Profil Anda</h1>
-      </div>
+  const getInitials = () => {
+    return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+  };
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="p-6 text-center">
-              <div className="h-24 w-24 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-3xl font-medium mx-auto mb-4">
-                {user.firstName.charAt(0)}{user.lastName.charAt(0)}
-              </div>
-              <h2 className="text-xl font-semibold text-secondary-800">
-                {user.firstName} {user.lastName}
-              </h2>
-              <p className="text-secondary-500 mb-3">@{user.username}</p>
-              <span className={`px-3 py-1 text-xs font-semibold rounded-full inline-block
-                ${user.role === 'admin' ? 'bg-danger-100 text-danger-800' :
-                  user.role === 'manager' ? 'bg-primary-100 text-primary-800' :
-                  user.role === 'developer' ? 'bg-success-100 text-success-800' :
-                  'bg-secondary-100 text-secondary-800'}`}
-              >
-                {user.role === 'admin' ? 'Admin' :
-                  user.role === 'manager' ? 'Manager' :
-                  user.role === 'developer' ? 'Developer' :
-                  'User'}
-              </span>
-            </div>
-            <div className="bg-secondary-50 px-6 py-4 border-t border-secondary-200">
-              <div className="text-sm text-secondary-500">
-                <p>Akun dibuat pada:</p>
-                <p className="font-medium text-secondary-700">
-                  {new Date(user.createdAt).toLocaleDateString('id-ID', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
-            </div>
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('id-ID', options);
+  };
+
+  return (
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Profil Anda</h1>
+
+      <div style={styles.profileContainer}>
+        <div style={styles.profileCard}>
+          <div style={styles.avatar}>
+            {getInitials()}
+          </div>
+          <h2 style={styles.profileName}>{user.firstName} {user.lastName}</h2>
+          <p style={styles.profileUsername}>@{user.username}</p>
+          <span style={styles.profileRole}>
+            {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+          </span>
+          <div style={styles.createdAt}>
+            <p>Akun dibuat pada:</p>
+            <p>{formatDate(user.createdAt)}</p>
           </div>
         </div>
 
-        <div className="lg:col-span-2">
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-secondary-200">
-              <h3 className="text-lg font-semibold text-secondary-800 flex items-center">
-                <FaUserEdit className="mr-2 text-primary-600" /> Edit Profil
-              </h3>
-            </div>
-            <div className="p-6">
-              <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-              >
-                {({ isSubmitting }) => (
-                  <Form className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label htmlFor="firstName" className="form-label">
-                          Nama Depan
-                        </label>
-                        <Field
-                          type="text"
-                          id="firstName"
-                          name="firstName"
-                          className="form-input"
-                        />
-                        <ErrorMessage name="firstName" component="div" className="form-error" />
-                      </div>
-
-                      <div>
-                        <label htmlFor="lastName" className="form-label">
-                          Nama Belakang
-                        </label>
-                        <Field
-                          type="text"
-                          id="lastName"
-                          name="lastName"
-                          className="form-input"
-                        />
-                        <ErrorMessage name="lastName" component="div" className="form-error" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="username" className="form-label">
-                        Username
-                      </label>
-                      <Field
-                        type="text"
-                        id="username"
-                        name="username"
-                        className="form-input"
-                      />
-                      <ErrorMessage name="username" component="div" className="form-error" />
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="form-label">
-                        Email
-                      </label>
-                      <Field
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="form-input"
-                      />
-                      <ErrorMessage name="email" component="div" className="form-error" />
-                    </div>
-
-                    <div className="flex justify-end">
-                      <button
-                        type="submit"
-                        className="btn btn-primary flex items-center"
-                        disabled={isSubmitting || loading}
-                      >
-                        <FaSave className="mr-2" />
-                        {isSubmitting || loading ? 'Menyimpan...' : 'Simpan Perubahan'}
-                      </button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </div>
+        <div style={styles.editProfileCard}>
+          <div style={styles.editHeader}>
+            <FaEdit style={styles.editIcon} />
+            <h3 style={styles.editTitle}>Edit Profil</h3>
           </div>
+
+          <form onSubmit={handleSubmit}>
+            <div style={styles.formRow}>
+              <div style={styles.formGroup}>
+                <label htmlFor="firstName" style={styles.formLabel}>
+                  Nama Depan
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  style={styles.formInput}
+                />
+              </div>
+
+              <div style={styles.formGroup}>
+                <label htmlFor="lastName" style={styles.formLabel}>
+                  Nama Belakang
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  style={styles.formInput}
+                />
+              </div>
+            </div>
+
+            <div style={styles.formGroup}>
+              <label htmlFor="username" style={styles.formLabel}>
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                style={styles.formInput}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label htmlFor="email" style={styles.formLabel}>
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                style={styles.formInput}
+                required
+              />
+            </div>
+
+            <button type="submit" style={styles.saveButton}>
+              <FaSave style={styles.buttonIcon} />
+              Simpan Perubahan
+            </button>
+          </form>
         </div>
       </div>
     </div>
   );
 };
 
-export default UserProfilePage;
+export default ProfilePage;

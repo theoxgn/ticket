@@ -112,39 +112,39 @@ const TicketListPage = () => {
               </div>
               <input
                 type="text"
-                className="form-input pl-10 w-full"
+                className="form-input pl-10 w-full rounded-md border-secondary-300 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
                 placeholder="Cari tiket berdasarkan judul atau kode"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button
-              className="btn btn-secondary flex items-center justify-center"
+              className={`btn ${filterOpen ? 'btn-primary' : 'btn-secondary'} flex items-center justify-center transition-colors duration-200`}
               onClick={toggleFilters}
             >
               <FaFilter className="mr-2" />
-              Filter
+              Filter {filterOpen ? 'Aktif' : ''}
             </button>
           </div>
 
           {filterOpen && (
-            <div className="bg-secondary-50 p-4 rounded-md mt-2">
+            <div className="bg-secondary-50 p-4 rounded-md mt-2 border border-secondary-200 shadow-sm transition-all duration-300 ease-in-out">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-medium">Filter Tiket</h3>
+                <h3 className="font-medium text-secondary-700">Filter Tiket</h3>
                 <button
-                  className="text-secondary-500 hover:text-secondary-700"
+                  className="text-secondary-500 hover:text-secondary-700 flex items-center text-sm font-medium"
                   onClick={clearFilters}
                 >
-                  <FaTimes /> <span className="sr-only">Hapus filter</span>
+                  <FaTimes className="mr-1" /> Reset Filter
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label htmlFor="status" className="form-label">Status</label>
+                  <label htmlFor="status" className="form-label block text-sm font-medium text-secondary-700 mb-1">Status</label>
                   <select
                     id="status"
                     name="status"
-                    className="form-input"
+                    className="form-input w-full rounded-md border-secondary-300 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-secondary-700"
                     value={filters.status}
                     onChange={handleFilterChange}
                   >
@@ -158,11 +158,11 @@ const TicketListPage = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="priority" className="form-label">Prioritas</label>
+                  <label htmlFor="priority" className="form-label block text-sm font-medium text-secondary-700 mb-1">Prioritas</label>
                   <select
                     id="priority"
                     name="priority"
-                    className="form-input"
+                    className="form-input w-full rounded-md border-secondary-300 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-secondary-700"
                     value={filters.priority}
                     onChange={handleFilterChange}
                   >
@@ -176,11 +176,11 @@ const TicketListPage = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="type" className="form-label">Tipe</label>
+                  <label htmlFor="type" className="form-label block text-sm font-medium text-secondary-700 mb-1">Tipe</label>
                   <select
                     id="type"
                     name="type"
-                    className="form-input"
+                    className="form-input w-full rounded-md border-secondary-300 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-secondary-700"
                     value={filters.type}
                     onChange={handleFilterChange}
                   >
@@ -193,11 +193,11 @@ const TicketListPage = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="projectId" className="form-label">Proyek</label>
+                  <label htmlFor="projectId" className="form-label block text-sm font-medium text-secondary-700 mb-1">Proyek</label>
                   <select
                     id="projectId"
                     name="projectId"
-                    className="form-input"
+                    className="form-input w-full rounded-md border-secondary-300 focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 text-secondary-700"
                     value={filters.projectId}
                     onChange={handleFilterChange}
                   >
@@ -210,6 +210,64 @@ const TicketListPage = () => {
                   </select>
                 </div>
               </div>
+              
+              {/* Filter chips/tags - show active filters */}
+              {(filters.status || filters.priority || filters.type || filters.projectId) && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {filters.status && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                      Status: {filters.status === 'open' ? 'Open' :
+                        filters.status === 'in_progress' ? 'In Progress' :
+                        filters.status === 'code_review' ? 'Code Review' :
+                        filters.status === 'testing' ? 'Testing' : 'Closed'}
+                      <button 
+                        className="ml-1 text-primary-600 hover:text-primary-800"
+                        onClick={() => setFilters(prev => ({ ...prev, status: '' }))}
+                      >
+                        <FaTimes />
+                      </button>
+                    </span>
+                  )}
+                  {filters.priority && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                      Prioritas: {filters.priority === 'highest' ? 'Tertinggi' :
+                        filters.priority === 'high' ? 'Tinggi' :
+                        filters.priority === 'medium' ? 'Sedang' :
+                        filters.priority === 'low' ? 'Rendah' : 'Terendah'}
+                      <button 
+                        className="ml-1 text-primary-600 hover:text-primary-800"
+                        onClick={() => setFilters(prev => ({ ...prev, priority: '' }))}
+                      >
+                        <FaTimes />
+                      </button>
+                    </span>
+                  )}
+                  {filters.type && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                      Tipe: {filters.type === 'bug' ? 'Bug' :
+                        filters.type === 'feature' ? 'Fitur' :
+                        filters.type === 'improvement' ? 'Perbaikan' : 'Tugas'}
+                      <button 
+                        className="ml-1 text-primary-600 hover:text-primary-800"
+                        onClick={() => setFilters(prev => ({ ...prev, type: '' }))}
+                      >
+                        <FaTimes />
+                      </button>
+                    </span>
+                  )}
+                  {filters.projectId && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                      Proyek: {projects.find(p => p.id === parseInt(filters.projectId))?.name || filters.projectId}
+                      <button 
+                        className="ml-1 text-primary-600 hover:text-primary-800"
+                        onClick={() => setFilters(prev => ({ ...prev, projectId: '' }))}
+                      >
+                        <FaTimes />
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
