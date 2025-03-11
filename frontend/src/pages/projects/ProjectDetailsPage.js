@@ -106,17 +106,11 @@ const ProjectDetailsPage = () => {
 
   useEffect(() => {
     if (currentProject && user) {
-      console.log("DEBUG - Current user:", user);
-      console.log("DEBUG - User global role:", user.role);
-      console.log("DEBUG - Project members:", currentProject.members);
-      
       // Cari user dalam anggota proyek
       const projectMember = currentProject.members?.find(member => member.id === user.id);
-      console.log("DEBUG - Found user in project members:", projectMember);
       
       // Dapatkan peran dalam proyek ini
       const projectRole = projectMember?.UserProject?.role;
-      console.log("DEBUG - User project role:", projectRole);
       
       // Set state berdasarkan peran
       setIsOwner(projectRole === 'owner');
@@ -130,11 +124,6 @@ const ProjectDetailsPage = () => {
         projectRole === 'manager';
       
       setIsAdmin(isProjectAdmin);
-      
-      console.log("DEBUG - Final permission states:");
-      console.log("  isManager:", projectRole === 'manager');
-      console.log("  isOwner:", projectRole === 'owner');
-      console.log("  isAdmin:", isProjectAdmin);
     }
   }, [currentProject, user]);
 
@@ -221,7 +210,7 @@ const ProjectDetailsPage = () => {
   }
 
   return (
-    <div>
+    <div className="max-w-full">
       <div className="mb-4">
         <Link to="/projects" className="text-primary-600 hover:text-primary-700 flex items-center transition-colors">
           <FaArrowLeft className="mr-2" /> Kembali ke Daftar Proyek
@@ -344,7 +333,7 @@ const ProjectDetailsPage = () => {
               <div className="mb-6">
                 <h4 className="text-md font-medium text-secondary-700 mb-2">Deskripsi</h4>
                 <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-100">
-                  <div className="prose max-w-none text-secondary-600">
+                  <div className="prose max-w-none text-secondary-600 max-h-40 overflow-y-auto custom-scrollbar">
                     {currentProject.description ? (
                       <p>{currentProject.description}</p>
                     ) : (
@@ -462,7 +451,7 @@ const ProjectDetailsPage = () => {
                 )}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 max-h-80 overflow-y-auto custom-scrollbar pr-2">
                 {currentProject.members?.map(member => (
                   <div 
                     key={member.id} 
@@ -519,7 +508,7 @@ const ProjectDetailsPage = () => {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
                 {currentProject.tickets?.map(ticket => (
                   <Link
                     key={ticket.id}
@@ -565,6 +554,25 @@ const ProjectDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Add CSS for custom scrollbar */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #c1c1c1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #a8a8a8;
+        }
+      `}</style>
 
       {/* Add Team Member Modal */}
       {showAddMemberModal && (
@@ -625,6 +633,7 @@ const ProjectDetailsPage = () => {
                   </div>
                 </div>
               )}
+              
               {/* User List */}
               <div className="mb-6">
                 <h4 className="font-medium text-secondary-700 mb-2">Pengguna Tersedia</h4>
@@ -638,7 +647,7 @@ const ProjectDetailsPage = () => {
                     <p className="text-secondary-500">Tidak ada pengguna tersedia untuk ditambahkan</p>
                   </div>
                 ) : (
-                  <div className="border border-secondary-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto shadow-inner">
+                  <div className="border border-secondary-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
                     {/* Jika ada pencarian, tampilkan hasil pencarian */}
                     {searchTerm.length >= 2 && searchResults.length > 0 ? (
                       searchResults.map(user => (
@@ -715,7 +724,7 @@ const ProjectDetailsPage = () => {
                   </div>
                 </div>
                 
-                <div className="mt-3 p-4 bg-secondary-50 rounded-lg border border-secondary-200">
+                <div className="mt-3 p-4 bg-secondary-50 rounded-lg border border-secondary-200 overflow-y-auto custom-scrollbar max-h-40">
                   {selectedRole === 'owner' ? (
                     <div className="flex items-start">
                       <div className="flex-shrink-0 mt-1 p-1 bg-primary-100 rounded-full">
