@@ -1,5 +1,5 @@
 // frontend/src/pages/tickets/TicketFormPage.js
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -8,7 +8,7 @@ import { TicketContext } from '../../context/TicketContext';
 import { ProjectContext } from '../../context/ProjectContext';
 import { UserContext } from '../../context/UserContext';
 import { AuthContext } from '../../context/AuthContext';
-import { FaSave, FaArrowLeft } from 'react-icons/fa';
+import { FaSave, FaArrowLeft, FaUpload, FaVideo, FaImage, FaTimesCircle } from 'react-icons/fa';
 
 // Tambahkan inline styles
 const styles = {
@@ -137,6 +137,68 @@ const styles = {
   requiredFieldIndicator: {
     color: '#e53e3e',
     marginLeft: '0.25rem'
+  },
+  fileUploadContainer: {
+    marginBottom: '1.5rem',
+    border: '2px dashed #cbd5e0',
+    borderRadius: '0.5rem',
+    padding: '1.5rem',
+    textAlign: 'center',
+    transition: 'all 0.2s',
+    backgroundColor: '#f7fafc'
+  },
+  fileUploadContainerActive: {
+    borderColor: '#3182ce',
+    backgroundColor: '#ebf8ff'
+  },
+  fileUploadInput: {
+    display: 'none'
+  },
+  fileUploadButton: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.5rem 1rem',
+    backgroundColor: '#3182ce',
+    color: 'white',
+    borderRadius: '0.375rem',
+    fontWeight: '500',
+    margin: '1rem 0',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  previewContainer: {
+    marginTop: '1rem',
+    position: 'relative',
+    display: 'inline-block'
+  },
+  previewImage: {
+    maxWidth: '200px',
+    maxHeight: '200px',
+    borderRadius: '0.25rem',
+    border: '1px solid #e2e8f0'
+  },
+  removeButton: {
+    position: 'absolute',
+    top: '0.5rem',
+    right: '0.5rem',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: '50%',
+    padding: '0.25rem',
+    cursor: 'pointer',
+    color: '#e53e3e'
+  },
+  videoLinkPreview: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0.5rem',
+    backgroundColor: '#f7fafc',
+    borderRadius: '0.375rem',
+    marginTop: '0.5rem'
+  },
+  videoLinkIcon: {
+    marginRight: '0.5rem',
+    color: '#3182ce'
   }
 };
 
@@ -144,19 +206,24 @@ const TicketFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const fileInputRef = useRef(null);
   const { user } = useContext(AuthContext);
   const { projects, getProjects } = useContext(ProjectContext);
   const { users, getUsers } = useContext(UserContext);
   const { currentTicket, loading, getTicket, addTicket, editTicket, clearCurrentTicket } = useContext(TicketContext);
   
   const [projectMembers, setProjectMembers] = useState([]);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [initialValues, setInitialValues] = useState({
     title: '',
     description: '',
     projectId: location.state?.projectId || '',
     type: 'task',
     priority: 'medium',
-    assigneeId: ''
+    assigneeId: '',
+    photoUrl: '',
+    videoLink: ''
   });
   
   const isEditMode = !!id;
@@ -182,8 +249,15 @@ const TicketFormPage = () => {
         projectId: currentTicket.projectId || '',
         type: currentTicket.type || 'task',
         priority: currentTicket.priority || 'medium',
-        assigneeId: currentTicket.assigneeId || ''
+        assigneeId: currentTicket.assigneeId || '',
+        photoUrl: currentTicket.photoUrl || '',
+        videoLink: currentTicket.videoLink || ''
       });
+
+      // Set photo preview if exists
+      if (currentTicket.photoUrl) {
+        setPhotoPreview(currentTicket.photoUrl);
+      }
     }
   }, [currentTicket, isEditMode]);
 
@@ -213,8 +287,65 @@ const TicketFormPage = () => {
     priority: Yup.string()
       .required('Prioritas wajib dipilih'),
     description: Yup.string(),
-    assigneeId: Yup.string()
+    assigneeId: Yup.string(),
+    videoLink: Yup.string()
+      .url('Masukkan URL yang valid')
+      .nullable()
   });
+
+  const handlePhotoUpload = (event, setFieldValue) => {
+    const file = event.currentTarget.files[0];
+    if (!file) return;
+
+    if (!file.type.match('image.*')) {
+      toast.error('File harus berupa gambar');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPhotoPreview(reader.result);
+      setFieldValue('photoUrl', reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e, setFieldValue) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    
+    if (!file.type.match('image.*')) {
+      toast.error('File harus berupa gambar');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPhotoPreview(reader.result);
+      setFieldValue('photoUrl', reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removePhoto = (setFieldValue) => {
+    setPhotoPreview(null);
+    setFieldValue('photoUrl', '');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -267,7 +398,7 @@ const TicketFormPage = () => {
           onSubmit={handleSubmit}
           enableReinitialize
         >
-          {({ isSubmitting, values, setFieldValue }) => (
+          {({ isSubmitting, values, handleChange, setFieldValue }) => (
             <Form>
               <div style={styles.formGroup}>
                 <div style={styles.requiredField}>
@@ -402,6 +533,86 @@ const TicketFormPage = () => {
                   placeholder="Masukkan deskripsi tiket"
                 />
                 <ErrorMessageComponent name="description" />
+              </div>
+
+              {/* Photo Upload Section */}
+              <div 
+                style={{
+                  ...styles.fileUploadContainer,
+                  ...(isDragging ? styles.fileUploadContainerActive : {})
+                }}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, setFieldValue)}
+              >
+                <label htmlFor="photoUpload" style={styles.formLabel}>
+                  <FaImage style={{ marginRight: '0.5rem', display: 'inline' }} />
+                  Upload Foto
+                </label>
+
+                <p style={styles.helpText}>
+                  Seret dan lepas foto di sini, atau
+                </p>
+
+                <label htmlFor="photoUpload" style={styles.fileUploadButton}>
+                  <FaUpload style={{ marginRight: '0.5rem' }} />
+                  Pilih File
+                </label>
+
+                <input
+                  type="file"
+                  id="photoUpload"
+                  style={styles.fileUploadInput}
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={(e) => handlePhotoUpload(e, setFieldValue)}
+                />
+
+                {photoPreview && (
+                  <div style={styles.previewContainer}>
+                    <img 
+                      src={photoPreview} 
+                      alt="Preview" 
+                      style={styles.previewImage}
+                    />
+                    <div 
+                      style={styles.removeButton}
+                      onClick={() => removePhoto(setFieldValue)}
+                    >
+                      <FaTimesCircle />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Video Link Section */}
+              <div style={styles.formGroup}>
+                <label htmlFor="videoLink" style={styles.formLabel}>
+                  <FaVideo style={{ marginRight: '0.5rem', display: 'inline' }} />
+                  Link Video (YouTube, Vimeo, dll)
+                </label>
+                <Field
+                  type="url"
+                  id="videoLink"
+                  name="videoLink"
+                  style={styles.formInput}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
+                <ErrorMessageComponent name="videoLink" />
+                
+                {values.videoLink && (
+                  <div style={styles.videoLinkPreview}>
+                    <FaVideo style={styles.videoLinkIcon} />
+                    <a 
+                      href={values.videoLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary-600 hover:text-primary-700 hover:underline"
+                    >
+                      {values.videoLink}
+                    </a>
+                  </div>
+                )}
               </div>
 
               <div style={styles.formActions}>

@@ -19,7 +19,9 @@ import {
   FaRegCalendarAlt,
   FaUserCircle,
   FaUsersCog,
-  FaPaperPlane
+  FaPaperPlane,
+  FaImage,
+  FaVideo
 } from 'react-icons/fa';
 
 const TicketDetailsPage = () => {
@@ -289,10 +291,57 @@ const TicketDetailsPage = () => {
                   )}
                 </div>
               </div>
-
+              {/* Photo and Video Section */}
+              {(currentTicket.photoUrl || currentTicket.videoLink) && (
+                <div className="mb-8">
+                  <h2 className="text-lg font-medium text-secondary-800 mb-4 pb-2 border-b border-secondary-200">Lampiran</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {currentTicket.photoUrl && (
+                      <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-200">
+                        <h3 className="font-medium text-secondary-700 mb-2 flex items-center">
+                          <FaImage className="mr-2 text-primary-600" /> Foto
+                        </h3>
+                        <div className="mt-2">
+                          <a href={currentTicket.photoUrl} target="_blank" rel="noopener noreferrer">
+                            <img 
+                              src={currentTicket.photoUrl} 
+                              alt="Lampiran" 
+                              className="max-w-full rounded-lg border border-secondary-200 hover:border-primary-300 transition-colors shadow-sm" 
+                            />
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {currentTicket.videoLink && (
+                      <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-200">
+                        <h3 className="font-medium text-secondary-700 mb-2 flex items-center">
+                          <FaVideo className="mr-2 text-primary-600" /> Video
+                        </h3>
+                        <div className="mt-2">
+                          <a 
+                            href={currentTicket.videoLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center bg-white p-3 rounded-lg border border-secondary-200 hover:border-primary-300 transition-colors shadow-sm"
+                          >
+                            <div className="bg-primary-100 p-2 rounded-full mr-3">
+                              <FaVideo className="text-primary-600" />
+                            </div>
+                            <div className="text-primary-600 hover:text-primary-700 hover:underline line-clamp-1 break-all">
+                              {currentTicket.videoLink}
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               {/* Comments Section */}
               <div className="border-t border-secondary-200 pt-8">
-                <h2 className="text-lg font-medium text-secondary-800 mb-4 flex items-center">
+                <h2 className="text-lg font-medium text-secondary-800 mb-4 bp-2 flex items-center">
                   <FaComment className="mr-2 text-primary-600" /> 
                   Komentar {currentTicket.comments?.length > 0 && `(${currentTicket.comments.length})`}
                 </h2>
@@ -435,7 +484,6 @@ const TicketDetailsPage = () => {
                 </div>
               </div>
             </div>
-
             {/* Sidebar */}
             <div>
               <div className="bg-secondary-50 rounded-lg p-5 shadow-sm sticky top-4">
