@@ -256,158 +256,131 @@ const ProjectDetailsPage = () => {
       </div>
       
       {/* Main Content - New Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/* Left Column - Project Stats */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-6">
+        {/* Left Column - Project Stats - Smaller column */}
         <div className="lg:col-span-1">
-          {/* Project Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 mb-6">
-            <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-primary-500 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-sm font-medium text-primary-600 uppercase">
-                    Total Anggota
-                  </div>
-                  <div className="text-2xl font-semibold">{projectStats.totalMembers}</div>
+          {/* Statistik Proyek - Left Card */}
+          <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+            <h4 className="text-sm font-medium text-gray-700 mb-3 pb-1 border-b border-gray-200">Statistik Proyek</h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center p-2 bg-blue-50 rounded-lg border border-blue-100">
+                <div className="bg-blue-100 p-2 rounded-full mr-3 flex-shrink-0">
+                  <FaUsers className="text-blue-600" size={14} />
                 </div>
-                <div className="p-3 bg-primary-100 rounded-full">
-                  <FaUsers className="text-primary-500 text-xl" />
+                <div>
+                  <div className="text-xs text-gray-500">Anggota</div>
+                  <div className="text-lg font-semibold text-blue-700">{projectStats.totalMembers}</div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-info-500 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-sm font-medium text-info-600 uppercase">
-                    Total Tiket
-                  </div>
-                  <div className="text-2xl font-semibold">{projectStats.totalTickets}</div>
+              
+              <div className="flex items-center p-2 bg-cyan-50 rounded-lg border border-cyan-100">
+                <div className="bg-cyan-100 p-2 rounded-full mr-3 flex-shrink-0">
+                  <FaTicketAlt className="text-cyan-600" size={14} />
                 </div>
-                <div className="p-3 bg-info-100 rounded-full">
-                  <FaTicketAlt className="text-info-500 text-xl" />
+                <div>
+                  <div className="text-xs text-gray-500">Total Tiket</div>
+                  <div className="text-lg font-semibold text-cyan-700">{projectStats.totalTickets}</div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-warning-500 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-sm font-medium text-warning-600 uppercase">
-                    Tiket Terbuka
-                  </div>
-                  <div className="text-2xl font-semibold">{projectStats.openTickets}</div>
+              
+              <div className="flex items-center p-2 bg-amber-50 rounded-lg border border-amber-100">
+                <div className="bg-amber-100 p-2 rounded-full mr-3 flex-shrink-0">
+                  <FaTasks className="text-amber-600" size={14} />
                 </div>
-                <div className="p-3 bg-warning-100 rounded-full">
-                  <FaTasks className="text-warning-500 text-xl" />
+                <div>
+                  <div className="text-xs text-gray-500">Tiket Terbuka</div>
+                  <div className="text-lg font-semibold text-amber-700">{projectStats.openTickets}</div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-success-500 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-sm font-medium text-success-600 uppercase">
-                    Tiket Selesai
-                  </div>
-                  <div className="text-2xl font-semibold">{projectStats.completedTickets}</div>
+              
+              <div className="flex items-center p-2 bg-green-50 rounded-lg border border-green-100">
+                <div className="bg-green-100 p-2 rounded-full mr-3 flex-shrink-0">
+                  <FaClipboardList className="text-green-600" size={14} />
                 </div>
-                <div className="p-3 bg-success-100 rounded-full">
-                  <FaClipboardList className="text-success-500 text-xl" />
+                <div>
+                  <div className="text-xs text-gray-500">Tiket Selesai</div>
+                  <div className="text-lg font-semibold text-green-700">{projectStats.completedTickets}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Right Column - Project Details */}
-        <div className="lg:col-span-2">
-          {/* Project Description */}
+        {/* Right Column - Project Details - More space for details */}
+        <div className="lg:col-span-4">
+          {/* Project Description - Reduced height and made more compact */}
           <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-secondary-200 bg-gradient-to-r from-primary-50 to-primary-100">
-              <h3 className="text-lg font-semibold text-secondary-800 flex items-center">
-                <FaInfoCircle className="mr-2 text-primary-600" /> Detail Proyek
+            <div className="px-4 py-3 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+              <h3 className="text-md font-semibold text-gray-800 flex items-center">
+                <FaInfoCircle className="mr-2 text-blue-600" /> Detail Proyek
               </h3>
             </div>
             
             <div className="p-6">
-              <div className="mb-6">
-                <h4 className="text-md font-medium text-secondary-700 mb-2">Deskripsi</h4>
-                <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-100">
-                  <div className="prose max-w-none text-secondary-600 max-h-40 overflow-y-auto custom-scrollbar">
-                    {currentProject.description ? (
-                      <p>{currentProject.description}</p>
-                    ) : (
-                      <p className="italic text-secondary-400">Tidak ada deskripsi</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-100">
-                  <h4 className="text-sm font-medium text-secondary-700 mb-3 pb-2 border-b border-secondary-200">Informasi Dasar</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center text-secondary-700">
-                      <div className="p-1.5 bg-primary-100 rounded-full mr-3">
-                        <FaCalendarAlt className="text-primary-600 text-sm" />
-                      </div>
-                      <div>
-                        <span className="text-xs text-secondary-500 block">Dibuat Pada</span>
-                        <span className="text-sm font-medium">
-                          {new Date(currentProject.createdAt || Date.now()).toLocaleDateString('id-ID')}
-                        </span>
-                      </div>
+              <div className="flex flex-wrap">
+                <div className="w-full lg:w-2/3 pr-0 lg:pr-4 mb-4 lg:mb-0">
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 h-full">
+                    <div className="prose max-w-none text-gray-600 max-h-24 overflow-y-auto custom-scrollbar text-sm">
+                      {currentProject.description ? (
+                        <p>{currentProject.description}</p>
+                      ) : (
+                        <p className="italic text-gray-400">Tidak ada deskripsi</p>
+                      )}
                     </div>
-                    
-                    {currentProject.updatedAt && (
-                      <div className="flex items-center text-secondary-700">
-                        <div className="p-1.5 bg-primary-100 rounded-full mr-3">
-                          <FaCalendarAlt className="text-primary-600 text-sm" />
-                        </div>
-                        <div>
-                          <span className="text-xs text-secondary-500 block">Terakhir Diperbarui</span>
-                          <span className="text-sm font-medium">
-                            {new Date(currentProject.updatedAt).toLocaleDateString('id-ID')}
-                          </span>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
                 
-                <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-100">
-                  <h4 className="text-sm font-medium text-secondary-700 mb-3 pb-2 border-b border-secondary-200">Detail Lainnya</h4>
+                <div className="w-full lg:w-1/3">
                   <div className="space-y-3">
-                    <div className="flex items-center text-secondary-700">
-                      <div className="p-1.5 bg-primary-100 rounded-full mr-3">
-                        <FaTicketAlt className="text-primary-600 text-sm" />
-                      </div>
-                      <div>
-                        <span className="text-xs text-secondary-500 block">Total Tiket</span>
-                        <span className="text-sm font-medium">
-                          {projectStats.totalTickets} Tiket
-                        </span>
+                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <h4 className="text-xs font-semibold text-gray-700 mb-2 pb-1 border-b border-gray-200">Informasi Proyek</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <div className="p-1.5 bg-blue-100 rounded-full mr-2 flex-shrink-0">
+                            <FaCalendarAlt className="text-blue-500" size={12} />
+                          </div>
+                          <div>
+                            <span className="text-xs text-gray-500 block">Dibuat Pada</span>
+                            <span className="text-xs font-medium text-gray-700">
+                              {new Date(currentProject.createdAt || Date.now()).toLocaleDateString('id-ID')}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {currentProject.updatedAt && (
+                          <div className="flex items-center">
+                            <div className="p-1.5 bg-blue-100 rounded-full mr-2 flex-shrink-0">
+                              <FaCalendarAlt className="text-blue-500" size={12} />
+                            </div>
+                            <div>
+                              <span className="text-xs text-gray-500 block">Diperbarui</span>
+                              <span className="text-xs font-medium text-gray-700">
+                                {new Date(currentProject.updatedAt).toLocaleDateString('id-ID')}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {currentProject.url && (
+                          <div className="flex items-center">
+                            <div className="p-1.5 bg-blue-100 rounded-full mr-2 flex-shrink-0">
+                              <FaLink className="text-blue-500" size={12} />
+                            </div>
+                            <div>
+                              <span className="text-xs text-gray-500 block">URL</span>
+                              <a 
+                                href={currentProject.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                              >
+                                {currentProject.url}
+                              </a>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    
-                    {currentProject.url && (
-                      <div className="flex items-center text-secondary-700">
-                        <div className="p-1.5 bg-primary-100 rounded-full mr-3">
-                          <FaLink className="text-primary-600 text-sm" />
-                        </div>
-                        <div>
-                          <span className="text-xs text-secondary-500 block">URL Proyek</span>
-                          <a 
-                            href={currentProject.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline"
-                          >
-                            {currentProject.url}
-                          </a>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -415,14 +388,13 @@ const ProjectDetailsPage = () => {
           </div>
         </div>
       </div>
-      
-      {/* Team Members and Tickets Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Team Members and Tickets Section - Modified to be larger */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         {/* Team Members */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-secondary-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-primary-100">
-            <h2 className="text-lg font-semibold text-secondary-800 flex items-center">
-              <FaUsersCog className="mr-2 text-primary-600" /> Anggota Tim
+          <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-blue-100">
+            <h2 className="text-md font-semibold text-gray-800 flex items-center">
+              <FaUsersCog className="mr-2 text-blue-600" /> Anggota Tim
             </h2>
             {/* Allow adding members if the user is an admin, owner, OR manager */}
             {isAdmin && (
@@ -434,7 +406,7 @@ const ProjectDetailsPage = () => {
               </button>
             )}
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {currentProject.members?.length === 0 ? (
               <div className="text-center py-8">
                 <div className="bg-secondary-50 p-6 rounded-lg inline-block mb-3">
@@ -451,7 +423,7 @@ const ProjectDetailsPage = () => {
                 )}
               </div>
             ) : (
-              <div className="space-y-4 max-h-80 overflow-y-auto custom-scrollbar pr-2">
+              <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar pr-2">
                 {currentProject.members?.map(member => (
                   <div 
                     key={member.id} 
@@ -478,11 +450,11 @@ const ProjectDetailsPage = () => {
           </div>
         </div>
         
-        {/* Tickets */}
+        {/* Tickets - Increased height */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-secondary-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-primary-100">
-            <h2 className="text-lg font-semibold text-secondary-800 flex items-center">
-              <FaTicketAlt className="mr-2 text-primary-600" /> Tiket
+          <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-blue-100">
+            <h2 className="text-md font-semibold text-gray-800 flex items-center">
+              <FaTicketAlt className="mr-2 text-blue-600" /> Tiket
             </h2>
             <Link 
               to="/tickets/new" 
@@ -492,7 +464,7 @@ const ProjectDetailsPage = () => {
               <FaPlus className="mr-1" /> <span>Buat Tiket</span>
             </Link>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {currentProject.tickets?.length === 0 ? (
               <div className="text-center py-8">
                 <div className="bg-secondary-50 p-6 rounded-lg inline-block mb-3">
@@ -508,7 +480,7 @@ const ProjectDetailsPage = () => {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
+              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-2">
                 {currentProject.tickets?.map(ticket => (
                   <Link
                     key={ticket.id}
