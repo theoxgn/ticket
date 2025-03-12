@@ -85,7 +85,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-full bg-white border-r border-secondary-200 overflow-y-auto shadow-md py-6">
+    <div className="h-full bg-white border-r border-secondary-200 shadow-md py-6">
       {/* User Profile Section */}
       <div className="px-4 mb-6">
         <div className="flex items-center mb-4">

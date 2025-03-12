@@ -19,7 +19,7 @@ const Footer = () => {
           </p>
         </div>
         <p className="text-sm">
-        <p>Made with <FaHeart className="inline text-red-500 mx-1" /> by theoxgn</p>
+          Made with <FaHeart className="inline text-red-500 mx-1" /> by theoxgn
         </p>
       </div>
     </footer>

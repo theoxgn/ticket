@@ -59,8 +59,8 @@ const Header = () => {
   };
 
   return (
-    <nav className={`${isScrolled ? 'bg-blue-700' : 'bg-gradient-to-r from-blue-600 to-sky-500'} text-white shadow-lg transition-all duration-300`}>
-        <div className="container mx-auto px-4">
+    <nav className={`${isScrolled ? 'bg-blue-700 shadow-md' : 'bg-gradient-to-r from-blue-600 to-sky-500'} text-white transition-all duration-300 w-full`}>
+      <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-3">
           <Link 
             to="/" 
@@ -72,6 +72,7 @@ const Header = () => {
             <span className="group-hover:text-primary-200 transition-all">Ticket Tracker</span>
           </Link>
 
+          {/* Rest of the header content remains the same */}
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
@@ -143,7 +144,7 @@ const Header = () => {
 
                   {isProfileMenuOpen && (
                     <div
-                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                     >
                       <div className="py-1">
                         <Link
@@ -194,6 +195,7 @@ const Header = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden pb-3 px-4 pt-2 border-t border-primary-600">
+          {/* Mobile Navigation content remains the same */}
           {/* Mobile Search */}
           <div className="relative mb-3">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

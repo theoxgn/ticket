@@ -31,11 +31,14 @@ const MainLayout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary-50">
-      <Header />
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-30">
+        <Header />
+      </div>
       
-      <div className="flex flex-grow">
-        {/* Sidebar for desktop */}
-        <div className="hidden md:block w-64 flex-shrink-0 transition-all duration-300">
+      <div className="flex flex-grow pt-16 pb-16"> {/* Added pb-16 for footer space */}
+        {/* Fixed Sidebar for desktop */}
+        <div className="hidden md:block fixed top-16 left-0 bottom-0 w-64 flex-shrink-0 transition-all duration-300 z-20 overflow-y-auto">
           <Sidebar />
         </div>
 
@@ -66,8 +69,8 @@ const MainLayout = () => {
           </div>
         )}
 
-        {/* Main content */}
-        <main className="flex-1 overflow-x-hidden">
+        {/* Main content with left margin for sidebar */}
+        <main className="flex-1 overflow-x-hidden md:ml-64">
           {/* Mobile sidebar toggle */}
           <div className="md:hidden p-4 flex items-center">
             <button
@@ -89,7 +92,6 @@ const MainLayout = () => {
         </main>
       </div>
       
-      <Footer />
     </div>
   );
 };
