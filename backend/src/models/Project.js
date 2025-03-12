@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'projectId',
         as: 'tickets'
       });
-  
       Project.belongsToMany(models.User, {
-        through: 'UserProjects',
+        through: models.UserProjects,
         as: 'members',
-        foreignKey: 'projectId'
+        foreignKey: 'projectId',
+        otherKey: 'userId'
       });
     };
   

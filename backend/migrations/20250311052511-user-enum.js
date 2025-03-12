@@ -2,7 +2,10 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // First, create the ENUM type if it doesn't exist
+    // Check if the column already exists
+    const tableInfo = await queryInterface.describeTable('UserProjects');
+    
+    // First, ensure the ENUM type exists
     await queryInterface.sequelize.query(`
       DO $$
       BEGIN
@@ -13,14 +16,19 @@ module.exports = {
       $$;
     `);
     
-    // Then add the column
-    await queryInterface.addColumn('UserProjects', 'role', {
-      type: Sequelize.ENUM('owner', 'manager', 'member'),
-      defaultValue: 'member'
-    });
+    // Only add the column if it doesn't already exist
+    if (!tableInfo.role) {
+      await queryInterface.addColumn('UserProjects', 'role', {
+        type: Sequelize.ENUM('owner', 'manager', 'member'),
+        defaultValue: 'member'
+      });
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('UserProjects', 'role');
+    const tableInfo = await queryInterface.describeTable('UserProjects');
+    if (tableInfo.role) {
+      await queryInterface.removeColumn('UserProjects', 'role');
+    }
   }
 };

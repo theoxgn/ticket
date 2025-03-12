@@ -1,5 +1,5 @@
 // src/controllers/projectController.js
-const { Project, User, Ticket } = require('../models');
+const { Project, User, Ticket, UserProjects } = require('../models');
 
 // Create new project
 exports.createProject = async (req, res) => {
@@ -32,14 +32,13 @@ exports.createProject = async (req, res) => {
 exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
-      include: [
-        {
-          model: User,
-          as: 'members',
-          attributes: ['id', 'username', 'firstName', 'lastName'],
-          through: { attributes: ['role'] }
+      include: [{
+        model: User,
+        as: 'members',
+        through: { 
+          attributes: []
         }
-      ]
+      }]
     });
 
     res.status(200).json({
@@ -112,7 +111,7 @@ exports.updateProject = async (req, res) => {
       through: { where: { role: ['owner', 'manager'] } }
     });
 
-    if (userProject.length === 0 && req.user.role !== 'admin') {
+    if (userProject.length === 0 && req.user.role !== 'admin' || req.user.role !== 'manager') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
@@ -175,12 +174,12 @@ exports.deleteProject = async (req, res) => {
     }
 
     // Check if user is authorized (admin or project owner)
-    const userProject = await project.getMembers({
+    const userProjects = await project.getMembers({
       where: { id: req.user.id },
       through: { where: { role: 'owner' } }
     });
 
-    if (userProject.length === 0 && req.user.role !== 'admin') {
+    if (userProjects.length === 0 && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
