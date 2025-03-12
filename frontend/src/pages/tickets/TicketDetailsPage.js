@@ -303,17 +303,28 @@ const TicketDetailsPage = () => {
                           <FaImage className="mr-2 text-primary-600" /> Foto
                         </h3>
                         <div className="mt-2">
-                          <a href={currentTicket.photoUrl} target="_blank" rel="noopener noreferrer">
+                          <div className="relative">
                             <img 
                               src={currentTicket.photoUrl} 
                               alt="Lampiran" 
                               className="max-w-full rounded-lg border border-secondary-200 hover:border-primary-300 transition-colors shadow-sm" 
+                              onError={(e) => {
+                                console.error("Failed to load image:", e);
+                                e.target.onerror = null; // Prevent infinite error loop
+                                e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='24' text-anchor='middle' fill='%23999999'%3EImage Not Available%3C/text%3E%3C/svg%3E";
+                                e.target.style.opacity = "0.7";
+                                e.target.style.filter = "grayscale(1)";
+                              }}
                             />
-                          </a>
+                          </div>
+                          
+                          {/* Show actual URL for debugging */}
+                          <div className="mt-2 text-xs text-secondary-500 break-all">
+                            <span className="font-semibold">Image URL:</span> {currentTicket.photoUrl}
+                          </div>
                         </div>
                       </div>
-                    )}
-                    
+                    )} 
                     {currentTicket.videoLink && (
                       <div className="bg-secondary-50 p-4 rounded-lg border border-secondary-200">
                         <h3 className="font-medium text-secondary-700 mb-2 flex items-center">

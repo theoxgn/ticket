@@ -51,19 +51,6 @@ exports.getFileUrl = (req, filePath) => {
     return `${baseUrl}/${filePath.replace(/\\/g, '/')}`;
 };
 
-// Utility to delete a file
-exports.deleteFile = (filePath) => {
-  if (!filePath) return;
-  
-  try {
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-  } catch (error) {
-    console.error('Error deleting file:', error);
-  }
-};
-
 /**
  * Saves a base64 image to disk and returns the URL
  * @param {string} base64String - The base64 encoded image string

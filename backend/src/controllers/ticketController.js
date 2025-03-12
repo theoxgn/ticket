@@ -200,19 +200,16 @@ exports.updateTicket = async (req, res) => {
 
     let photoUrl = ticket.photoUrl; 
     if (req.file) {
-      // If a new file was uploaded via multer
       photoUrl = uploadController.getFileUrl(req, req.file.path);
       
       // Delete old file if it exists
       if (ticket.photoUrl && ticket.photoUrl.includes('/uploads/')) {
         const oldPhotoPath = ticket.photoUrl.split('/uploads/')[1];
         if (oldPhotoPath) {
-          // Full path would be 'uploads/' + oldPhotoPath
           uploadController.deleteFile(`uploads/${oldPhotoPath}`);
         }
       }
     } else if (req.body.photoUrl && req.body.photoUrl.startsWith('data:image/')) {
-      // If a new base64 image string was provided
       photoUrl = uploadController.saveBase64Image(req.body.photoUrl, req, 'tickets');
       
       // Delete old file if it exists
@@ -223,7 +220,6 @@ exports.updateTicket = async (req, res) => {
         }
       }
     } else if (req.body.photoUrl !== undefined) {
-      // If photoUrl was explicitly set in the request (could be empty string to remove)
       photoUrl = req.body.photoUrl;
     }
 
