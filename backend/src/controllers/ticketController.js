@@ -1,5 +1,6 @@
 // src/controllers/ticketController.js
 const { Ticket, User, Project, Comment } = require('../models');
+const uploadController = require('./uploadController');
 
 // Create new ticket
 exports.createTicket = async (req, res) => {
@@ -10,7 +11,8 @@ exports.createTicket = async (req, res) => {
       type, 
       priority, 
       projectId, 
-      assigneeId 
+      assigneeId,
+      videoLink 
     } = req.body;
 
     // Validate project exists
@@ -23,6 +25,15 @@ exports.createTicket = async (req, res) => {
     const ticketCount = await Ticket.count({ where: { projectId } });
     const ticketKey = `${project.key}-${ticketCount + 1}`;
 
+    let photoUrl = null;
+    if (req.file) {
+      photoUrl = uploadController.getFileUrl(req, req.file.path);
+    } else if (req.body.photoUrl && req.body.photoUrl.startsWith('data:image/')) {
+      photoUrl = uploadController.saveBase64Image(req.body.photoUrl, req, 'tickets');
+    } else if (req.body.photoUrl) {
+      photoUrl = req.body.photoUrl;
+    }
+
     // Create ticket
     const ticket = await Ticket.create({
       title,
@@ -32,7 +43,9 @@ exports.createTicket = async (req, res) => {
       ticketKey,
       projectId,
       reporterId: req.user.id,
-      assigneeId: assigneeId || null
+      assigneeId: assigneeId || null,
+      photoUrl,
+      videoLink
     });
 
     // Fetch the created ticket with associations
@@ -185,7 +198,46 @@ exports.updateTicket = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
-    ticket = await ticket.update(req.body);
+    let photoUrl = ticket.photoUrl; 
+    if (req.file) {
+      // If a new file was uploaded via multer
+      photoUrl = uploadController.getFileUrl(req, req.file.path);
+      
+      // Delete old file if it exists
+      if (ticket.photoUrl && ticket.photoUrl.includes('/uploads/')) {
+        const oldPhotoPath = ticket.photoUrl.split('/uploads/')[1];
+        if (oldPhotoPath) {
+          // Full path would be 'uploads/' + oldPhotoPath
+          uploadController.deleteFile(`uploads/${oldPhotoPath}`);
+        }
+      }
+    } else if (req.body.photoUrl && req.body.photoUrl.startsWith('data:image/')) {
+      // If a new base64 image string was provided
+      photoUrl = uploadController.saveBase64Image(req.body.photoUrl, req, 'tickets');
+      
+      // Delete old file if it exists
+      if (ticket.photoUrl && ticket.photoUrl.includes('/uploads/')) {
+        const oldPhotoPath = ticket.photoUrl.split('/uploads/')[1];
+        if (oldPhotoPath) {
+          uploadController.deleteFile(`uploads/${oldPhotoPath}`);
+        }
+      }
+    } else if (req.body.photoUrl !== undefined) {
+      // If photoUrl was explicitly set in the request (could be empty string to remove)
+      photoUrl = req.body.photoUrl;
+    }
+
+    // Update ticket
+    ticket = await ticket.update({
+      title: req.body.title,
+      description: req.body.description,
+      type: req.body.type,
+      priority: req.body.priority,
+      status: req.body.status,
+      assigneeId: req.body.assigneeId,
+      photoUrl,
+      videoLink: req.body.videoLink
+    });
 
     // Fetch the updated ticket with associations
     const updatedTicket = await Ticket.findByPk(ticket.id, {
