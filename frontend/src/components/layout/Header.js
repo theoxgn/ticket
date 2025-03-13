@@ -59,7 +59,7 @@ const Header = () => {
   };
 
   return (
-    <nav className={`${isScrolled ? 'bg-blue-700 shadow-md' : 'bg-gradient-to-r from-blue-600 to-sky-500'} text-white transition-all duration-300 w-full`}>
+    <nav className='bg-gradient-to-r from-blue-600 to-sky-500 text-white transition-all duration-300 w-full'>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-3">
           <Link 
