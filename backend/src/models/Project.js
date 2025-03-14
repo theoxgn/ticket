@@ -38,6 +38,12 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'userId'
       });
     };
+
+      // Additional helper methods for member management
+  Project.prototype.hasMember = async function(userId) {
+    const members = await this.getMembers({ where: { id: userId } });
+    return members.length > 0;
+  };
   
     return Project;
   };

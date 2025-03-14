@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { TicketContext } from '../../context/TicketContext';
 import { ProjectContext } from '../../context/ProjectContext';
 import { FaPlus, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
+import { AuthContext } from '../../context/AuthContext';
 
 const TicketListPage = () => {
   const { tickets, loading, getTickets } = useContext(TicketContext);
   const { projects, getProjects } = useContext(ProjectContext);
+  const { user } = useContext(AuthContext);
   
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
@@ -18,20 +20,33 @@ const TicketListPage = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTickets, setFilteredTickets] = useState([]);
+  const [isManager, setIsManager] = useState(false);
 
   useEffect(() => {
     getTickets();
     getProjects();
   }, []);
 
+  // Check if user is a manager or admin
+  useEffect(() => {
+    if (user) {
+      setIsManager(['admin', 'manager'].includes(user.role));
+    }
+  }, [user]);
+
   useEffect(() => {
     applyFilters();
-  }, [tickets, searchTerm, filters]);
+  }, [tickets, searchTerm, filters, isManager, user]);
 
   const applyFilters = () => {
-    if (!tickets) return;
+    if (!tickets || !user) return;
 
     let result = [...tickets];
+
+    // For non-manager roles, only show tickets assigned to the current user
+    if (!isManager) {
+      result = result.filter(ticket => ticket.assigneeId === user.id);
+    }
 
     // Apply search
     if (searchTerm) {

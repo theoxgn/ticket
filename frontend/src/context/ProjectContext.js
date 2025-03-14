@@ -1,5 +1,5 @@
 // frontend/src/context/ProjectContext.js
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useCallback } from 'react';
 import {
   getAllProjects,
   getProjectById,
@@ -90,8 +90,8 @@ const projectReducer = (state, action) => {
 export const ProjectProvider = ({ children }) => {
   const [state, dispatch] = useReducer(projectReducer, initialState);
 
-  // Get all projects
-  const getProjects = async () => {
+  // Get all projects - using useCallback for stability
+  const getProjects = useCallback(async () => {
     dispatch({ type: 'GET_PROJECTS_START' });
     try {
       const res = await getAllProjects();
@@ -105,7 +105,7 @@ export const ProjectProvider = ({ children }) => {
         payload: err.response?.data?.message || 'Failed to get projects'
       });
     }
-  };
+  }, []);
 
   // Get project by ID
   const getProject = async (projectId) => {

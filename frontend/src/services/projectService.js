@@ -6,7 +6,7 @@ export const createProject = async (projectData) => {
   return response.data;
 };
 
-// Get all projects
+// Get all projects with members
 export const getAllProjects = async () => {
   const response = await api.get('/projects');
   return response.data;
@@ -27,5 +27,11 @@ export const updateProject = async (projectId, projectData) => {
 // Add user to project
 export const addUserToProject = async (projectId, userData) => {
   const response = await api.post(`/projects/${projectId}/users`, userData);
+  return response.data;
+};
+
+// Remove user from project
+export const removeUserFromProject = async (projectId, userId) => {
+  const response = await api.delete(`/projects/${projectId}/users/${userId}`);
   return response.data;
 };

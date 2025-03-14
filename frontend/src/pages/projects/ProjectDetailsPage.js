@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { ProjectContext } from '../../context/ProjectContext';
 import { AuthContext } from '../../context/AuthContext';
 import { UserContext } from '../../context/UserContext';
+import TeamMemberSection from '../../components/project/TeamMemberSection';
 import { 
   FaEdit, 
   FaPlus, 
@@ -24,7 +25,7 @@ import {
 const ProjectDetailsPage = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const { currentProject, loading, getProject, clearCurrentProject, addUserToProject } = useContext(ProjectContext);
+  const { currentProject, loading: projectsLoading, getProject, clearCurrentProject, addUserToProject } = useContext(ProjectContext);
   const { users, loading: usersLoading, getUsers } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -190,7 +191,7 @@ const ProjectDetailsPage = () => {
     }
   };
 
-  if (loading) {
+  if (projectsLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
@@ -391,64 +392,14 @@ const ProjectDetailsPage = () => {
       {/* Team Members and Tickets Section - Modified to be larger */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         {/* Team Members */}
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-blue-100">
-            <h2 className="text-md font-semibold text-gray-800 flex items-center">
-              <FaUsersCog className="mr-2 text-blue-600" /> Anggota Tim
-            </h2>
-            {/* Allow adding members if the user is an admin, owner, OR manager */}
-            {isAdmin && (
-              <button 
-                className="flex items-center px-3 py-1 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors text-sm"
-                onClick={handleAddTeamMember}
-              >
-                <FaPlus className="mr-1" /> <span>Tambah Anggota</span>
-              </button>
-            )}
-          </div>
-          <div className="p-4">
-            {currentProject.members?.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="bg-secondary-50 p-6 rounded-lg inline-block mb-3">
-                  <FaUsers className="text-secondary-400 text-4xl mx-auto" />
-                </div>
-                <p className="text-secondary-500 mb-4">Belum ada anggota tim.</p>
-                {isAdmin && (
-                  <button 
-                    className="btn btn-primary inline-flex items-center bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                    onClick={handleAddTeamMember}
-                  >
-                    <FaPlus className="mr-2" /> Tambah Anggota Tim
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar pr-2">
-                {currentProject.members?.map(member => (
-                  <div 
-                    key={member.id} 
-                    className="flex items-center justify-between p-3 bg-white border border-secondary-100 hover:border-primary-200 hover:bg-primary-50 rounded-lg transition-all shadow-sm"
-                  >
-                    <div className="flex items-center">
-                      <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white h-10 w-10 rounded-full flex items-center justify-center font-medium shadow-sm">
-                        {member.firstName.charAt(0)}{member.lastName.charAt(0)}
-                      </div>
-                      <div className="ml-3">
-                        <p className="font-medium text-secondary-800">
-                          {member.firstName} {member.lastName}
-                        </p>
-                        <p className="text-sm text-secondary-500">@{member.username}</p>
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 bg-primary-100 text-primary-700 text-xs rounded-full capitalize font-medium border border-primary-200">
-                      {member.UserProject?.role || 'member'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <TeamMemberSection 
+          currentProject={currentProject}
+          isAdmin={isAdmin}
+          members={currentProject.members || []}
+          loading={projectsLoading}
+          handleAddTeamMember={handleAddTeamMember}
+          getProject={getProject}
+        />
         
         {/* Tickets - Increased height */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">

@@ -219,7 +219,7 @@ exports.removeUserFromProject = async (req, res) => {
       through: { where: { role: ['owner', 'manager'] } }
     });
 
-    if (currentUserRole.length === 0 && req.user.role !== 'admin') {
+    if (currentUserRole.length === 0 && req.user.role !== 'manager') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
