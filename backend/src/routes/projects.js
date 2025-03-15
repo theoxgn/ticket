@@ -7,7 +7,8 @@ const {
   getProject, 
   updateProject, 
   addUserToProject ,
-  removeUserFromProject
+  removeUserFromProject,
+  getProjectProgress
 } = require('../controllers/projectController');
 const { protect } = require('../middlewares/auth');
 const { 
@@ -24,5 +25,6 @@ router.get('/:id', getProject);
 router.put('/:id', updateProject);
 router.post('/:id/users', addUserToProject);
 router.delete('/:id/users/:userId', removeUserFromProject);
+router.get('/:id/progress', getProjectProgress);
 
 module.exports = router;

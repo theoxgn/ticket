@@ -48,7 +48,7 @@ const TeamMemberSection = ({
   }
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white overflow-hidden lg:border-r lg:pr-4">
       <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-blue-100">
         <h2 className="text-md font-semibold text-gray-800 flex items-center">
           <FaUsersCog className="mr-2 text-blue-600" /> Anggota Tim

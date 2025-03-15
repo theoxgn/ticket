@@ -234,3 +234,72 @@ exports.removeUserFromProject = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+exports.getProjectProgress = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const { Ticket, User, Sequelize } = require('../models');
+    const { Op } = Sequelize;
+    
+    const project = await Project.findByPk(projectId, {
+      include: [
+        {
+          model: Ticket,
+          as: 'tickets',
+          where: {
+            type: {
+              [Op.ne]: 'bug' 
+            }
+          },
+          required: false
+        },
+        {
+          model: User,
+          as: 'members',
+          through: { attributes: ['role'] }
+        }
+      ]
+    });
+
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+    
+    // Calculate project progress
+    const totalTasks = project.tickets.length;
+    
+    // Count completed tickets - use only existing status fields
+    const completedTasks = project.tickets.filter(
+      ticket => ticket.status === 'closed' || ticket.status === 'resolved'
+    ).length;
+    
+    const membersCount = project.members.length || 1; // Avoid division by zero
+    
+    // Calculate progress percentage with team size factor
+    let progressPercentage = 0;
+    if (totalTasks > 0) {
+      // Basic formula: (completedTasks / totalTasks) * 100
+      const basePercentage = (completedTasks / totalTasks) * 100;
+      
+      // Factor in team size - adjust calculation as needed
+      const teamSizeFactor = totalTasks / membersCount;
+      progressPercentage = Math.round(basePercentage / Math.min(teamSizeFactor, 3));
+      
+      // Ensure percentage doesn't exceed 100%
+      progressPercentage = Math.min(progressPercentage, 100);
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        totalTasks,
+        completedTasks,
+        membersCount,
+        progressPercentage
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
