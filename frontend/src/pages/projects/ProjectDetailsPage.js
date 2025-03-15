@@ -192,6 +192,22 @@ const ProjectDetailsPage = () => {
     }
   };
 
+  // Get status badge style
+  const getBugTypeBadgeClass = (type) => {
+    switch(type) {
+      case 'task':
+        return 'bg-blue-100 text-blue-700';
+      case 'feature':
+        return 'bg-yellow-100 text-yellow-700';
+      case 'improvement':
+        return 'bg-green-100 text-green-700';
+      case 'bug':
+        return 'bg-red-100 text-white-700';
+      default:
+        return 'bg-secondary-100 text-secondary-700';
+    }
+  };
+
   if (projectsLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -422,6 +438,9 @@ const ProjectDetailsPage = () => {
                       <div className="flex items-center">
                         <span className="px-2 py-1 bg-secondary-100 text-secondary-700 text-xs rounded font-medium mr-2">
                           {ticket.ticketKey}
+                        </span>
+                        <span className={`px-2 py-1 rounded mr-2 text-xs ${getBugTypeBadgeClass(ticket.type)}`}>
+                          {ticket.type}
                         </span>
                         <h3 className="font-medium text-secondary-800 line-clamp-1">
                           {ticket.title}
