@@ -44,8 +44,8 @@ exports.createTicket = async (req, res) => {
       projectId,
       reporterId: req.user.id,
       assigneeId: assigneeId || null,
-      photoUrl,
-      videoLink
+      photoUrl: photoUrl || null,
+      videoLink: videoLink || null
     });
 
     // Fetch the created ticket with associations
