@@ -11,6 +11,7 @@ import {
   FaCheckCircle,
   FaChartLine
 } from 'react-icons/fa';
+import DashboardAnalytics from '../../components/dashboard/DashboardAnalytics';
 
 const DashboardPage = () => {
   const { projects, loading: projectsLoading, getProjects } = useContext(ProjectContext);
@@ -60,66 +61,10 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-primary-500">
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-sm font-medium text-primary-600 uppercase">
-                Total Proyek
-              </div>
-              <div className="text-2xl font-semibold">{stats.totalProjects}</div>
-            </div>
-            <div className="p-3 bg-primary-100 rounded-full">
-              <FaProjectDiagram className="text-primary-500 text-xl" />
-            </div>
-          </div>
-        </div>
+      {/* Add Dashboard Analytics */}
+      <DashboardAnalytics tickets={tickets} projects={projects} />
 
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-success-500">
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-sm font-medium text-success-600 uppercase">
-                Total Tiket
-              </div>
-              <div className="text-2xl font-semibold">{stats.totalTickets}</div>
-            </div>
-            <div className="p-3 bg-success-100 rounded-full">
-              <FaTicketAlt className="text-success-500 text-xl" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-info-500">
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-sm font-medium text-info-600 uppercase">
-                Tiket Terbuka
-              </div>
-              <div className="text-2xl font-semibold">{stats.openTickets}</div>
-            </div>
-            <div className="p-3 bg-info-100 rounded-full">
-              <FaCheckCircle className="text-info-500 text-xl" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-warning-500">
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="text-sm font-medium text-warning-600 uppercase">
-                Prioritas Tinggi
-              </div>
-              <div className="text-2xl font-semibold">{stats.highPriorityTickets}</div>
-            </div>
-            <div className="p-3 bg-warning-100 rounded-full">
-              <FaExclamationTriangle className="text-warning-500 text-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
         {/* Recent Projects */}
         <div className="bg-white rounded-lg shadow-md">
           <div className="flex justify-between items-center p-4 border-b border-secondary-200">
